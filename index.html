@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Death in Venice — a game of chapters, after Thomas Mann</title>
+<script data-goatcounter="https://steffenhuck.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<style>
+  :root{
+    --paper:#f4eddd;
+    --paper-cool:#efeae0;
+    --ink:#211c15;
+    --ink-soft:#4a4234;
+    --red:#8e2620;
+    --rule:#b8a780;
+    --shadow:rgba(60,45,20,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#191510;
+      --paper-cool:#171512;
+      --ink:#e8dfc9;
+      --ink-soft:#b0a488;
+      --red:#c65a4e;
+      --rule:#5a4f38;
+      --shadow:rgba(0,0,0,.4);
+    }
+  }
+  html{background:var(--paper);transition:background 1.6s ease;}
+  html.pallor{background:var(--paper-cool);}
+  body{
+    margin:0; padding:0;
+    background:transparent;
+    color:var(--ink);
+    font-family:"Hoefler Text","Baskerville","Baskerville Old Face","Palatino Linotype","Book Antiqua",Georgia,serif;
+    font-size:17.5px;
+    line-height:1.68;
+  }
+  #page{
+    max-width:34em;
+    margin:0 auto;
+    padding:2.2rem 1.4rem 4rem;
+  }
+  /* running head */
+  #runhead{
+    text-align:center;
+    font-size:.72em;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:.4rem;
+    min-height:1.2em;
+  }
+  #runhead .strand{
+    display:block;
+    font-style:italic;
+    text-transform:none;
+    letter-spacing:.03em;
+    font-size:.95em;
+    margin-top:.25em;
+  }
+  #headrule{
+    border:none;
+    border-top:1px solid var(--rule);
+    margin:0 0 2rem;
+  }
+  /* node */
+  h2.nodetitle{
+    font-weight:normal;
+    font-variant:small-caps;
+    letter-spacing:.14em;
+    text-align:center;
+    font-size:1.12em;
+    margin:0 0 1.4rem;
+  }
+  h2.nodetitle::after{
+    content:"";
+    display:block;
+    width:3.2em;
+    margin:.9rem auto 0;
+    border-top:1px solid var(--red);
+  }
+  .prose p{
+    margin:0 0 1em;
+    text-align:justify;
+    hyphens:auto;
+    -webkit-hyphens:auto;
+  }
+  .prose p+p{text-indent:1.4em;}
+  .prose .flash{font-style:italic;}
+  .prose .setpiece{margin:1.2em 0;}
+  /* choices */
+  #choices{margin-top:2.2rem;}
+  .choice{
+    display:block;
+    margin:.85em 0;
+    padding-left:1.5em;
+    text-indent:-1.5em;
+    cursor:pointer;
+    color:var(--ink);
+    text-decoration:none;
+  }
+  .choice::before{
+    content:"—";
+    color:var(--red);
+    padding-right:.55em;
+  }
+  .choice:hover span{border-bottom:1px solid var(--red);}
+  .choice.bare{
+    text-align:center;
+    text-indent:0;
+    padding-left:0;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin-top:2.6rem;
+  }
+  .choice.bare::before{content:"";padding:0;}
+  .choice.bare:hover span{border-bottom:1px dotted var(--ink-soft);}
+  /* title page */
+  #title-block{text-align:center;margin-top:3.5rem;}
+  #title-block .series{
+    font-size:.78em;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);
+  }
+  #title-block h1{
+    font-weight:normal;
+    font-size:2.5em;
+    letter-spacing:.1em;
+    font-variant:small-caps;
+    margin:.6rem 0 .2rem;
+    line-height:1.15;
+  }
+  #title-block .after{
+    font-style:italic;
+    margin:.4rem 0 0;
+  }
+  #title-block .credit{
+    font-size:.82em;
+    color:var(--ink-soft);
+    margin:.6rem 0 0;
+  }
+  .ornament{
+    color:var(--red);
+    text-align:center;
+    margin:1.8rem 0;
+    letter-spacing:.6em;
+  }
+  #preface{margin-top:1.2rem;}
+  #preface p{text-align:justify;hyphens:auto;margin:0 0 1em;}
+  #preface .formula{font-style:italic;text-align:center;text-indent:0;margin-top:1.4em;}
+  .begin{
+    display:block;
+    text-align:center;
+    font-variant:small-caps;
+    letter-spacing:.25em;
+    margin:2.4rem auto 0;
+    cursor:pointer;
+    color:var(--red);
+    text-decoration:none;
+    font-size:1.05em;
+  }
+  .begin:hover{border-bottom:1px solid var(--red);}
+  /* finis */
+  .finis{
+    margin-top:2.6rem;
+    border-top:1px solid var(--rule);
+    padding-top:2rem;
+    text-align:center;
+  }
+  .finis .fword{
+    font-size:.78em;letter-spacing:.5em;text-transform:uppercase;color:var(--ink-soft);
+  }
+  .finis h3{
+    font-weight:normal;
+    font-variant:small-caps;
+    letter-spacing:.18em;
+    font-size:1.35em;
+    margin:.8rem 0 .4rem;
+  }
+  .finis .verdict{
+    font-style:italic;
+    margin:.4rem 0 1.6rem;
+  }
+  .finis .compare{
+    text-align:justify;
+    hyphens:auto;
+    margin:0 0 1em;
+  }
+  footer{
+    text-align:center;
+    margin-top:4.5rem;
+    padding-top:1.2rem;
+    border-top:1px solid var(--rule);
+    font-size:.85em;
+  }
+  footer a{color:var(--ink-soft);font-style:italic;text-decoration:none;text-transform:lowercase;}
+  footer a:hover{border-bottom:1px solid var(--rule);}
+  /* transitions */
+  #node{animation:appear .7s ease;}
+  @keyframes appear{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .endgame .prose p{line-height:1.85;}
+</style>
+</head>
+<body>
+<div id="page">
+  <div id="runhead"></div>
+  <hr id="headrule">
+  <div id="node"></div>
+  <footer><a href="https://steffenhuck.github.io">steffen huck</a></footer>
+</div>
+
+<script>
+/* ============================================================
+   DEATH IN VENICE — a game of chapters, after Thomas Mann
+   The Escapable Canon · engine + text
+   ============================================================ */
+
+/* ---------- running-head strands (the double arrow) ---------- */
+const STATIONS = {
+  0:["Chapter One","early May — the papers speak of cholera in Astrakhan, even in Moscow"],
+  1:["Chapter Three","mid-May — in Venice, this same week, two corpses carry the vibrio; the cases are concealed"],
+  2:["Chapter Three","late May — ten cases, twenty, thirty, in different quarters; concealed"],
+  3:["Chapter Three","the first days of June — a traveler dies at home in Austria; the German papers print rumors"],
+  4:["Chapter Three","June — the German and Austrian guests are leaving"],
+  5:["Chapter Four","the golden weeks — the dying spreads in the alleys; the wards begin to fill"],
+  6:["Chapter Four","the fourth week — carbolic in the streets; placards at the corners"],
+  7:["Chapter Five","high summer — denials in the papers; the chief medical officer has resigned"],
+  8:["Chapter Five","high summer — eighty in a hundred die; the barricade is days away"],
+  9:["Chapter Five","the last days — the hotels empty"]
+};
+
+/* ---------- state ---------- */
+let S;
+function freshState(){
+  return { node:"TITLE", from:null, mark:null,
+           f1:false, f2:false, f3:false, f4:false, f5:false,
+           ev:{} };
+}
+function has(k){ return !!S.ev[k]; }
+function markIs(k){ return S.mark===k; }
+
+/* ---------- the nodes ---------- */
+const NODES = {
+
+/* ================= SPINE ================= */
+
+S1:{ t:0, title:"The Mortuary Chapel",
+text:()=>`
+<p>Munich, early May of 19—, a year that for months showed our continent so threatening a face. Gustav Aschenbach — or von Aschenbach, as his name had read officially since his fiftieth birthday; whose pages stood in the nation’s school readers — had walked too far, overwrought by the morning’s work, and waited, alone, for the tram by the North Cemetery.</p>
+<p>The stonemasons’ yards; the chapel’s gilt inscriptions, <span class="flash">“They enter into the dwelling of God”</span>; and in the portico, above the two apocalyptic beasts, a man: snub-nosed, reddish brows with two vertical furrows between them, lips drawn back from long white teeth, not of the local stock. The stranger stared back until the master turned away — and found in himself, like a seizure, a travel-urge with visions in it: a tropical swamp, hairy palm-shafts, the eyes of a crouching tiger. He examined the feeling, as he examined everything.</p>`,
+choices:()=>[
+ {label:"Call it what it is: flight — from the desk, from the frozen work, from a cold and passionate service.", to:"S2", flag:"f1", ev:"flight"},
+ {label:"Call it hygiene: a man who works as he does may prescribe himself a few weeks of South.", to:"S2", ev:"hygiene"},
+ {label:"Master it. The work for which he lives comes first; there will be no journey.", to:"B0", ev:"desk"}
+]},
+
+S2:{ t:0, title:"Map and Timetable",
+text:()=>`
+<p>The stranger was gone — not at the shelter, not on the further platform, not in the car — but the seizure kept its colors. That evening the master gave it to reason in the usual way, over map and timetable, and reason returned it trimmed: ${S.f1?"flight, then, but a short one":"a measure, then, a sensible one"} — not the tigers, naturally; the work stood at a delicate place and could spare weeks, not months. And yet the Lloyd’s sailings from Trieste lay open on the same page, printed just as calmly as the wagons-lits.</p>`,
+choices:()=>{
+  const c=[
+   {label:"The island off the Istrian coast, praised these last few years — strangeness within easy reach.", to:"S3", ev:"istria"},
+   {label:"Venice at once? — no. Twice before, that city has made him ill. The island first; see how the South behaves.", to:"S3", ev:"venice-shied"}
+  ];
+  if(S.f1) c.push({label:"Admit where the visions point. Book the berth beyond Suez — as far as the tigers.", to:"A1", ev:"tigers"});
+  return c;
+}},
+
+S3:{ t:1, title:"Pola", short:true,
+text:()=>`
+<p>The island: rain, close air, a small closed Austrian hotel society, and no soft sandy shore to make peace with the sea. Wrong — he knew it within days.</p>`,
+choices:()=>[
+ {label:"Where does one go overnight to the incomparable, the fabulously different? The question answers itself: Venice.", to:"S4", ev:"to-venice"},
+ {label:"Hold out. A man whose favorite word is “Hold out!” can hold out against weather.", to:"S3b", ev:"held-island"}
+]},
+
+S3b:{ t:1, title:"Rain on the Adriatic", short:true,
+text:()=>`
+<p>A week more of it. The word held; nothing else did — not the food, not the light, not the sentences he tried in the evenings.</p>`,
+choices:()=>[
+ {label:"Venice after all, by the morning boat.", to:"S4", ev:"to-venice-late"},
+ {label:"Home — and then the mountain house. The summer will be work, like every summer.", to:"B2", ev:"pola-retreat"}
+]},
+
+S4:{ t:2, title:"The Ship",
+text:()=>`
+<p>A weathered Italian steamer out of Pola, sooty and glum. Below decks a goat-bearded agent with the manner of an old-time circus director — snub-nosed too, if one cared to look — praised the destination while taking the fare: <span class="flash">“Ah, Venice! A splendid city! Irresistible to the man of culture!”</span></p>
+<p>On deck, among young clerks on an outing, one figure in a pale yellow summer suit laughed loudest of all — and was old: rouge, wig, and dyed imperial, a false young man, tolerated by the young as one of themselves. The master watched the gray sea and this creature by turns, with a discomfort he did not analyze. At the landing stage the old thing, drunk by then, lisped a blessing after him: <span class="flash">“Our compliments to the little darling, the prettiest little darling…”</span> — and his upper teeth fell to his lip.</p>`,
+choices:()=>[
+ {label:"Look at the false young man squarely; understand what is being shown you.", to:"S5", mark:"fop", ev:"fop-watched"},
+ {label:"Look away. A tired man sees crooked things straight again by not looking at them.", to:"S5", ev:"fop-avoided"}
+]},
+
+S5:{ t:2, title:"The Gondola",
+text:()=>`
+<p>${markIs("fop")?"The creature’s “little darling” came with him over the water.":"He had looked away; the lisped blessing followed him over the water anyway."}</p>
+<p class="setpiece">Who would not have to fight down a secret shudder, boarding a Venetian gondola for the first time, or after long disuse? That strange conveyance, come down unchanged from balladry, black as nothing else on earth is black except coffins — it remembers soundless criminal adventures in the plashing night; it remembers, still more, death itself: the bier, the dim obsequies, the last silent ride. And the seat of such a bark, that coffin-black, dull-black-cushioned armchair, is the softest, most luxurious, most enervating seat in the world.</p>
+<p>Thus the master’s own late notebook; the Biographer adds only that the rower that day held no license. Snub-nosed, reddish-browed, the two furrows in place, he rowed — not toward the steamer landing his passenger had ordered, but out across the widening lagoon, whispering to himself between his teeth. <span class="flash">“You will pay,”</span> he said, when payment was raised; and, when obedience was: <span class="flash">“I row you well.”</span></p>`,
+choices:()=>[
+ {label:"“That is true — you row me well.” Lean back into the cushions and let the fare go where it goes.", to:"S6", mark:"yielded", ev:"gondola-yield"},
+ {label:"Sit up. “Turn the boat. I want the steamer for San Marco.”", to:"S6", mark:"protest", ev:"gondola-protest"}
+]},
+
+S6:{ t:2, title:"The Rattan Table",
+text:()=>`
+<p>${markIs("protest")?"The protest went into the water like the coins one throws there; the man rowed on, and rowed him well, to the Lido’s landing steps.":"So, rocked and disobeyed, he was carried well — to the Lido’s landing steps."} While the master changed money to pay, gondola and gondolier vanished — the only rower in Venice without a license, said the old man with the boat-hook, and expected here. The passenger had ridden for nothing.</p>
+<p>The Bäder-Hotel received him as an expected guest. At the evening hour the great hall assembled its languages, and close by him, Polish: three girls of fifteen to seventeen, severe and clean in slate-colored cloister dress, a governess, and a boy of perhaps fourteen with long honey-colored hair. The master noted, with a connoisseur’s cool astonishment, that the boy was perfectly beautiful — and noted too, being who he was, the pedagogy that starched the sisters plain and let the brother grow lovely. A pearl-hung lady, cool and measured, their mother, came late; the children kissed her hand.</p>`,
+choices:()=>[
+ {label:"Keep the leather chair a while; the Polish family is worth a page of anyone’s attention.", to:"S7", mark:"lingered", ev:"hall-lingered"},
+ {label:"Go in to dinner when the gong finds you. Beauty is not an appointment.", to:"S7", ev:"hall-prompt"}
+]},
+
+S7:{ t:3, title:"Foul Weather",
+text:()=>`
+<p>${markIs("lingered")?"He had watched them go in to dinner — an exit made with such an accent of discipline and self-respect that it stirred him strangely — and slept deep.":"He slept deep, and woke to a change for the worse."} The next days went gray. Land-wind; a sea dull, shrunken, far withdrawn; and when he opened his window the master believed he caught the foul breath of the lagoon. He had been beaten here once before — years ago, this same leaden sky, until he fled Venice like an invalid. In such weather, he held, the city was forbidden him.</p>
+<p>Mornings, the boy played by the water with the others, and the name came across the sand in two melodious syllables with a long-drawn u at the end, sweet and wild at once: <span class="flash">“Tadziu! Tadziu!”</span> — Tadzio, the master worked out over breakfast, from Tadeusz. The watching was easy, and cost nothing yet. The headache and the weighted eyelids were another matter.</p>`,
+choices:()=>[
+ {label:"If the wind has not turned by tomorrow, leave — without the invalid’s haste this time, but leave.", to:"S8", ev:"resolve-leave"},
+ {label:"Unpack the trunk fully and give the place its chance; a sea this near excuses a sky.", to:"S11", ev:"stayed-early"}
+]},
+
+S8:{ t:3, title:"The Morning of Departure",
+text:()=>`
+<p>He had packed lightly overnight, notified the office, settled the bill. Now the porter pressed him: the motor-car, the company’s private canal, the train — the time, said the porter, was short. The master found that it was nothing of the kind, and breakfasted unhurried, out of stubbornness against the hotel habit of expelling its leavers early.</p>
+<p>It fell so that Tadzio crossed the buffet-room just as he rose to go: passed the gray-haired departing guest, lowered his eyes in that modest way of his, and raised them again, soft and full. <span class="flash">Adieu, Tadzio!</span> thought the master. <span class="flash">I saw you briefly.</span> And, against every habit, he shaped it with his lips, half aloud, and added: <span class="flash">Be blessed!</span></p>`,
+choices:()=>[
+ {label:"Go: the launch across the lagoon, and the station.", to:"S9", ev:"to-station"},
+ {label:"Countermand the departure at the door. The wind has turned — surely someone said the wind has turned.", to:"S11", mark:"countermand", ev:"stayed-early"}
+]},
+
+S9:{ t:4, title:"The Station",
+text:()=>`
+<p>The crossing was a via dolorosa. The public gardens fell behind; the Piazzetta opened once more in princely grace and was forsaken; the palaces filed past; and the traveler, shading his eyes, understood with astonishment how much of his heart the city held. He breathed the faint rot of sea and swamp — the very air he was fleeing — in deep, tenderly aching draughts.</p>
+<p>At the station, confusion resolved into news: his trunk, mishandled at the Hotel Excelsior’s forwarding office, had gone off with strangers’ luggage in an entirely wrong direction. To Como. — The Biographer records what the master’s face did not show: a jolt of adventurous joy, an incredulous hilarity of the chest, at this mishap that could not have suited a Sunday’s child better.</p>`,
+choices:()=>[
+ {label:"Refuse to travel without the trunk. Turn back; wait for it at the Bäder-Hotel.", to:"S10", ev:"station-return"},
+ {label:"Board the train regardless. A trunk can follow a man to Munich — or anywhere.", to:"E1", ev:"train"}
+]},
+
+S10:{ t:4, title:"The Return",
+text:()=>`
+<p>${has("verona")?"From Verona he had wired ahead, and returned by the evening train; the errant trunk would follow in its own comic time.":"Twenty minutes after reaching the station he was on the Grand Canal again, bound back for the Lido, hiding under a mask of resigned annoyance the excitement of a truant boy."} <span class="flash">“Pas de chance, monsieur,”</span> smiled the Swiss lift-attendant, and the fugitive was housed once more, in a room almost the double of the first.</p>
+<p>He sat an hour at the open window, content and displeased with himself at once. Toward noon Tadzio came up from the sea in his striped linen suit with the red breast-knot, and the man at the window felt the truth arrive plainly: that the parting had been made so hard by Tadzio; that it had been for Tadzio’s sake. He sat very still. Then his head lifted, and his arms, hanging slack over the chair’s arms, turned slowly outward, palms forward — an opening of the arms; a calmly receiving, welcoming gesture.</p>`,
+choices:()=>[
+ {label:"Let the gesture stand; admit what the parting had cost, and to whom.", to:"S11", ev:"admitted"},
+ {label:"Close the hands. Call it the sea, the air — the reprieve from a tiresome journey.", to:"S11", mark:"denial", ev:"denied"}
+]},
+
+S11:{ t:5, title:"The Golden Weeks",
+text:()=>{
+  let open;
+  if(markIs("countermand")) open="The countermanded departure left a taste of reprieve that lasted for days; and the weather, as though rewarding him, turned.";
+  else if(markIs("denial")) open="Whatever name he refused it, the thing itself kept its lodging; and the weather turned.";
+  else if(has("stayed-early")&&!has("to-station")) open="The trunk stood unpacked to the last shirt, a settled man’s trunk; and the weather, as though rewarding him, turned.";
+  else if(markIs("como")) open="He returned trunk in hand, a man restored to his property and to something he did not itemize; and the weather turned.";
+  else if(markIs("triest-back")) open="He came back across the gulf with a finished night’s sleep and an unfinished argument; and the weather turned.";
+  else open="Two days he dined in travel clothes; then the errant trunk was set down in his room, he unpacked all of it, and the weather turned.";
+  return `
+<p>${open} Now — so the master’s late pages render fine weather, and the Biographer lets them — <span class="flash">day after day the god with the burning cheeks drove his fire-breathing team naked through the rooms of heaven, and his yellow locks streamed in the east wind.</span></p>
+<p>The days took an order: early to the beach, the white mornings, the long blue noons; the beautiful boy — Tadzio, of the Polish family, he of the honey-colored hair — nearly always in view, playing, wading, called off the platforms by women’s voices crying the sweet wild name. The master, who had never loved pleasure, found himself enchanted by it. The evenings held the scent of the park, and a promise: that tomorrow would be as today.</p>`;
+},
+choices:()=>[
+ {label:"Down to the beach; the day’s watch begins early.", to:"S12", ev:"watch"},
+ {label:"The world’s mail first — a desk travels with a man like him, wherever he goes.", to:"S12", mark:"mail", ev:"mail"}
+]},
+
+S12:{ t:5, title:"The Page and a Half",
+text:()=>`
+<p>${markIs("mail")?"The mail was answered in a quarter of an hour, and seemed, for the first time in his life, a waste of the situation.":"On the beach the watching had long since become study."} He knew every line and turn of that form by now; and one morning, watching the boy stand at the sea’s rim — hands clasped behind his neck, rocking slowly on the balls of his feet, dreaming into the blue — the master’s thought went up like a flare: <span class="flash">with this one look he seemed to grasp the beautiful itself, form as the thought of God, the one pure perfection that lives in the spirit, and of which a human likeness had here been raised, light and lovely, for adoration.</span></p>
+<p class="setpiece">Out of sea-glitter and sun-haze an old scene assembled itself for him: the plane tree not far from the walls of Athens, the clear brook, the votive images; an elderly man and a beautiful young one, the wise beside the lovable; and Socrates instructing Phaidros on longing and virtue — that beauty, little Phaidros, is the one form of the spiritual that we can receive by the senses and endure by the senses; that the lover is more divine than the beloved, <span class="flash">for the god is in the one and not in the other.</span></p>
+<p>Into these dangerous, delicious hours there arrived, by forwarded post, a question: the intellectual world wished to hear him, in his own voice, on a certain great and burning problem of culture and taste. The subject was his; the craving to make it shine, suddenly irresistible — and his desire was to work in Tadzio’s presence, to take the boy’s stature as the model of his prose, to carry this beauty over into the spiritual, as the eagle in the old story carried the Trojan shepherd-boy up to the ether.</p>`,
+choices:()=>[
+ {label:"Write — the page and a half, here under the awning, the eyes rising and falling between the sentence and its model.", to:"S13", flag:"f2", ev:"wrote"},
+ {label:"Put the writing-case away. Some hours are for spending, not for coining.", to:"S13", ev:"looked-only"}
+]},
+
+S13:{ t:6, title:"The Boardwalk",
+text:()=>`
+<p>${S.f2?"The page and a half was finished — prose whose purity, nobility and swinging tension of feeling would shortly excite the admiration of many — and its author felt spent, wrecked even, as though his conscience were filing a complaint after a debauch.":"He spent the hours instead, to the last coin of them, and the days closed over the spending without a mark."}</p>
+<p>Next morning, from the front steps, he saw Tadzio alone — already on his way to the sea, just nearing the beach barrier. The simplest thing in the world offered itself: to overtake the boy, to lay a light word on him, a friendly French phrase between hotel guests; to make an easy, cheerful acquaintance of it; to be answered by a voice and a look — and be sobered. The beautiful boy walked slowly. He could be caught up.</p>`,
+choices:()=>[
+ {label:"Overtake Tadzio on the boardwalk and speak the friendly phrase.", to:"S14", mark:"attempted", ev:"attempted"},
+ {label:"Let the boy go untroubled. A man of his years does not accost children on planks.", to:"S14", ev:"declined-address"}
+]},
+
+S14:{ t:6, title:"The Smile",
+text:()=>`
+<p>${markIs("attempted")?"He quickened his step; he came up behind the light shoulders on the boardwalk — and his heart hammered like a machine, the phrase died to a pressed trembling in his throat, and, in sudden fear of the boy’s questioning glance, he passed with bowed head and said nothing. Too late, he thought. Too late! — though whether it was that, or whether the aging man did not want the sobering, the Biographer declines to decide.":"He let the boy go, and told himself it was tact; the Biographer, who has read the notebooks, is not so sure the sobering was ever wanted."}</p>
+<p>One evening the Polish party missed dinner, and the master, deeply uneasy, paced before the terrace — until, under the arc-lamps, the nunlike sisters appeared with the governess, and four steps behind them Tadzio, up from the pier. Seeing the man who was so plainly waiting, the boy smiled: a speaking, familiar, unguarded smile — <span class="flash">the smile of Narcissus over the mirroring water</span>, a little distorted, as that smile must be. The receiver of it fled into the dark of the rear park and heard himself deliver the strangest scolding: <span class="flash">“You must not smile so! Listen — no one may smile like that at anyone!”</span> On the bench, the standing formula of longing rose in him — impossible here, absurd, depraved, ridiculous, and holy even so.</p>`,
+choices:()=>[
+ {label:"Whisper the formula — the three worn words, to nobody, into the dark.", to:"S15", mark:"whisper", ev:"whisper"},
+ {label:"Refuse it the words. What is never said can still be governed.", to:"S15", ev:"withheld"}
+]},
+
+S15:{ t:6, title:"The Barber’s Word", short:true,
+text:()=>`
+<p>${markIs("whisper")?"The night took the whispered words without comment.":""} “You are not afraid of the evil, sir?” said the hotel barber next day, mid-chatter, of a German family that had cut short its stay. Then he was suddenly very busy with the scissors.</p>`,
+choices:()=>[
+ {label:"“The evil?” — press the barber: what evil?", to:"S16", mark:"pressed", ev:"pressed-barber"},
+ {label:"Let the word drop into the smell of soap. Things overheard are not yet things known.", to:"S16", ev:"let-drop"}
+]},
+
+S16:{ t:7, title:"Placards",
+text:()=>`
+<p>${markIs("pressed")?"Pressed, the chatterer went deaf, knew nothing, and talked hastily of the weather.":"The word stayed behind in the shop, but it walked out with him all the same."} That afternoon, Venice. In the calles an odor he had been meeting for days without admitting it: a sweetish, druggist’s smell — of misery, and wounds, and suspect cleanliness; in the narrower streets it thickened, and he knew it at last — they were disinfecting the city. At the corners, printed notices: the population fatherly warned, on account of certain disorders of the gastric system usual in this weather, against oysters, mussels, and the water of the canals. Knots of people stood silent on the bridges.</p>
+<p>At the hotel, the reading-table. The foreign papers: nothing. The home papers: rumors, shifting figures, official denials, doubts of the denials. So that explained the departures. <span class="flash">“They ought to keep silent,”</span> he thought, agitated, throwing the journals down — and his heart filled, at the same time, with a dark satisfaction.</p>`,
+choices:()=>[
+ {label:"Ask the little manager in the French frock-coat, lightly, over nothing at all: why is Venice being disinfected?", to:"S17", mark:"asked-official", ev:"asked-manager"},
+ {label:"Ask the shopkeeper who leans in his doorway among corals and false amethysts.", to:"S17", mark:"asked-official", ev:"asked-shopman"},
+ {label:"Ask no one. Keep the city’s secret warm against your own.", to:"S17", mark:"kept-silent", ev:"kept-silent"}
+]},
+
+S17:{ t:7, title:"The Singers",
+text:()=>`
+<p>${markIs("asked-official")?"The answer came back smooth as a printed card: <span class=\"flash\">“A precautionary measure, sir. The sirocco is oppressive; it is not favorable to the health.”</span> The answer had been rehearsed somewhere behind the eyes of the man who gave it.":"He carried the question home unasked, and it sat with him at dinner like a guest."} That evening a little band of street singers played the front garden: two men, two women, guitar and mandolin; and their soloist — a baritone buffo with hardly any voice and great comic energy; snub-nosed, reddish-browed, the two furrows in place — brought with him, each time his capering rounds passed below the terrace, a gust of carbolic.</p>
+<p>The company laughed with his laughing-song till the garden shook. The master sat at the balustrade over pomegranate juice and soda, sparkling ruby-red, six paces from where Tadzio leaned at the stone rail; and there rose in him, unbidden, out of his parents’ house, the hourglass: the rust-red sand ran fine and soundless through the glass neck; where it dwindled in the upper hollow, a small tearing whirlpool had formed.</p>`,
+choices:()=>[
+ {label:"Beckon the singer up between songs and put the question to him plainly: why is Venice being disinfected?", to:"S18", mark:"asked-singer", ev:"asked-singer"},
+ {label:"Only listen. The hourglass has said what the evening had to say.", to:"S18", ev:"hourglass"}
+]},
+
+S18:{ t:8, title:"The English Clerk",
+text:()=>`
+<p>${markIs("asked-singer")?"The singer answered hoarse and word-perfect — <span class=\"flash\">“A precautionary measure, sir! The sirocco is oppressive; it is not favorable to the health”</span> — took an unduly large coin, and grinned his way down the steps; where two hotel servants fell on him and whispered a cross-examination into his face until he swore he had been discreet.":"The singers finished, mocked the company with a laugh no longer in the program, and slipped into the dark."}</p>
+<p>Next afternoon the stubborn man walked into the English travel bureau off the Piazza to change money. The clerk was young, woolly-suited, with honest eyes set close together, and of that settled loyalty of bearing so strange and striking in the nimble-witted South. The official answer stood ready on his lips; behind it, visibly, stood something unofficial.</p>`,
+choices:()=>[
+ {label:"Put the fatal question — why is Venice being disinfected? — and hold the young man’s eye until the truth owns itself owed.", to:"S19", flag:"f3", ev:"clerk"},
+ {label:"Take the changed notes and go. A man on holiday owes nobody his questions.", to:"S19", ev:"no-clerk"}
+]},
+
+S19:{ t:8, title:"The Purifying Deed",
+text:()=>{
+  if(S.f3) return `
+<p>He began: <span class="flash">“No cause for concern, sir. A measure of no serious import…”</span> But raising his blue eyes he met the stranger’s tired, slightly contemptuous gaze — and reddened. <span class="flash">“That,”</span> he said, low, <span class="flash">“is the official explanation, which it is thought well here to insist upon. I will tell you that there is something more behind it.”</span> And then, in his honest and comfortable tongue, he told the truth.</p>
+<p>Asiatic cholera — bred in the warm morasses of the Ganges delta, risen with the mephitic breath of that lush island-wilderness shunned of men, <span class="flash">in whose bamboo thickets the tiger crouches</span>. (The master heard, without moving, his own Munich vision read back to him as epidemiology.) It had crossed to the Mediterranean ports; and in mid-May, in Venice, on one and the same day, the vibrios had been found in the blackened corpses of a boatman and a greengrocer-woman. Concealed. By now the deaths ran to scores; the wards were full; fear for the hotels kept the lie official while the sickness killed eight of every ten it touched. <span class="flash">“You would do well,”</span> the young man finished, <span class="flash">“to leave today rather than tomorrow. The barricade cannot be many days off.”</span></p>
+<p>On the sun-hazed Piazza the man in possession of the truth walked up and down, tasting disgust, and triumph, and a fantastic sweetness. A clean and decent act stood clearly before him; he drafted it word for word: <span class="flash">“Madame, permit a stranger to serve you with a warning that self-interest withholds from you. Leave, at once, with your son and your daughters. Venice is plague-struck.”</span></p>`;
+  return `
+<p>He changed his money and went. So he had no more than the rest of the unknowing: the smell, the placards, the answers given with one voice — and his own unbidden hopes of chaos, which he did not examine. The Poles went that afternoon toward the Merceria; he followed as far as the clock tower and lost the thread of his own steps, and stood a while where the pigeons wheeled, a famous man with nothing in his hands.</p>`;
+},
+choices:()=>{
+  if(S.f3) return [
+   {label:"To the pearl-hung lady tonight, after dinner, with the drafted words.", to:(st)=>st.f2?"D1":"S19b", ev:"tried-warn"},
+   {label:"“They ought to keep silent,” he whispers; and then: “I will keep silent.”", to:"S20", ev:"silence"},
+   {label:"Neither warn nor stay: resolve to leave tomorrow, alone, quietly.", to:"S19c", ev:"resolved"}
+  ];
+  return [
+   {label:"Put the question to the hall porter — why is Venice being disinfected? — and hear the city say its piece.", to:"S20", mark:"asked-porter", ev:"asked-porter"},
+   {label:"Let the city keep its secret. It is keeping his.", to:"S20", ev:"complicity"}
+  ];
+}},
+
+S19b:{ t:8, title:"After Dinner", short:true,
+text:()=>`
+<p>He rose after dinner and crossed half the hall toward the pearl-hung lady — and, as once before on the boardwalk, when a friendly phrase had died in his throat, no word came. He did not speak.</p>`,
+choices:()=>[
+ {label:"“Tomorrow, then.” A man must sleep before he can be decent.", to:"S20", ev:"warn-deferred"},
+ {label:"The terrace, a last glass, and a quiet contempt for the man drinking it.", to:"S20", ev:"self-contempt"}
+]},
+
+S19c:{ t:8, title:"The Resolve Overnight", short:true,
+text:()=>`
+<p>He packed half the small case and stopped. The timetable lay open on the bed. The early boat leaves at seven; a man who means it sleeps first.</p>`,
+choices:()=>[
+ {label:"Lie down until the early boat.", to:"S20", mark:"resolved", ev:"slept-on-it"},
+ {label:"Sit up with the timetable and mean it harder.", to:"S20", mark:"resolved", ev:"sat-up"}
+]},
+
+S20:{ t:8, title:"The Dream",
+text:()=>`
+<p>That night came the fearful dream — if dream is the word for an experience of body and spirit that befell him in deepest sleep, in complete independence, with utter sensuous presence, its theater his own soul, its events breaking in from without, throwing down his resistance — a deep, spiritual resistance — passing through, and leaving his existence, the whole culture of his life, ravaged behind them.</p>
+<p class="setpiece">Fear was the beginning, fear and desire and a horrified curiosity for what would come. Night reigned, and his senses listened: tumult from far off, uproar, a mixed noise — rattling, blaring, dull thunder, shrill rejoicing over it, and a certain howl on a long-drawn u — all shot through and dominated, horribly sweet, by a deep, cooing, shamelessly persistent flute. He knew a word, dark, but naming what came: <span class="flash">“The stranger god!”</span> Mountain country, like the country round his summer house; and down through the torn light, from the wooded height, between trunks and mossy boulders, it came rolling and plunging: human beings, beasts, a swarm, a raging rout — women stumbling over fur garments, shaking tambourines above thrown-back groaning heads, swinging sparking firebrands and naked daggers; men with horns over their brows, girded with pelts, bending their necks and lifting arm and thigh, clashing brazen basins, beating drums in fury; and the howl went up around him, the soft consonants, the long-drawn u-call at the end, sweet and wild, like nothing ever heard —</p>
+<p>${markIs("resolved")?"The half-packed case stood by the wall of the room in which this was happening; the resolve did not survive the night. It was among the first things eaten.":"His whole will stood up in him, honest to the last, to defend what was his against the enemy of the composed and dignified mind."}</p>`,
+choices:()=>[
+ {label:"Hold against the ring-dance to the last — your own, your fathers’, the whole gray fortress of a life.", to:"S21", ev:"resisted"},
+ {label:"Let go. Join the ring-dance; taste what the flute promises.", to:"S21", mark:"joined", ev:"joined"}
+]},
+
+S21:{ t:9, title:"The Barber",
+text:()=>`
+<p>${markIs("joined")?"They were he himself, at the end — as they threw themselves on the beasts; and his soul tasted the unchastity and fury of going under.":"He held to the last; and the holding was taken from him like everything else — whether a man gives to that god or is robbed by him comes to the same accounting."} He woke unnerved, shattered, powerless in the demon’s hand. The guests were leaving anyway — the truth had begun to seep, beach cabins stood empty; only the pearl-hung lady stayed on with her own, too proud to run, or unreached by rumor.</p>
+<p>Like any lover, he wished to please, and felt the bitter fear that it was not possible. He went often now to the hotel barber — the man of “the evil” — who talked him gently backward in the chair: gray hair, said the artist of the comb, was a falser falsehood than the correction people scorned; we are as old as our hearts feel; the master had a positive right to his natural color.</p>`,
+choices:()=>[
+ {label:"Give yourself to the hands: the two waters, the tongs, the shading under the eyes, the carmine.", to:"S22", flag:"f4", ev:"rouge"},
+ {label:"“Enough.” Rise gray from the chair, and pay for the trim alone.", to:"S22", ev:"gray"}
+]},
+
+S22:{ t:9, title:"Storm Wind",
+text:()=>`
+<p>${S.f4?"In the glass sat a blooming young man with deepened eyes and raspberry lips. <span class=\"flash\">“Now the gentleman may fall in love without misgiving,”</span> said the cosmetician, with the crawling courtesy of his kind. The ensnared man went out dream-happy, confused, and afraid; his necktie was red, his broad-brimmed straw hat wound with a many-colored band.":"He rose as gray as he had sat down, poorer by nothing but a haircut, and was obscurely proud of it for as much as an hour."}</p>
+<p>A lukewarm storm-wind had come up. Rain fell thin and seldom, but the air was thick and full of rot; flapping, slapping and whistling went round the walks, and to the man fevering ${S.f4?"under his paint":"behind his gray temples"} it seemed foul wind-spirits were abroad, unclean sea-birds that root in a condemned man’s meal. For the sultriness killed appetite, and the fancy pressed in that food itself carried the infection.</p>
+${S.f3?"<p>Whoever could leave was leaving; the hall filled daily with strangers’ luggage. The Poles alone made no sign.</p>":""}`,
+choices:()=>{
+  if(S.f3 && !S.f4 && !S.f5) return [
+   {label:"Pack tonight. The night boat, Trieste, Munich — while the barricade is still a rumor.", to:"L1", ev:"fled-late"},
+   {label:"Follow the Poles into the city today; the watch is all that remains of the day’s order.", to:"S23", ev:"pursuit"}
+  ];
+  if(S.f3) return [
+   {label:"Pack tonight. The night boat, Trieste, Munich — while the barricade is still a rumor.", to:"S22b", ev:"flight-failed"},
+   {label:"Follow the Poles into the city today; the watch is all that remains of the day’s order.", to:"S23", ev:"pursuit"}
+  ];
+  return [
+   {label:"Follow the Poles into the city; the two-o’clock vaporetto.", to:"S23", ev:"pursuit"},
+   {label:"Keep to the beach today; let the chair hold you; watch from the distance the place allows.", to:"S23", mark:"beach", ev:"beach-kept"}
+  ];
+}},
+
+S22b:{ t:9, title:"As Far as the Hall", short:true,
+text:()=>{
+  if(S.f4) return `
+<p>He got as far as the hall. In the lift’s mirror stood a young-looking man in a red necktie who could not be carried home to Munich — could not be shown to his own doorway, his own publisher, his own dead. He set the small case down.</p>`;
+  return `
+<p>He got as far as the counter where one buys a ticket. He had stood at this counter before, and been returned; and he found that a third departure was simply not in him. He set the small case down.</p>`;
+},
+choices:()=>[
+ {label:"Upstairs again; lie down till the shaking passes. Call it the sirocco.", to:"S23", mark:"fever", ev:"fever-noted"},
+ {label:"The garden, the wet walk, until the body consents to obey again.", to:"S23", ev:"garden"}
+]},
+
+S23:{ t:9, title:"The Pursuit",
+text:()=>`
+<p>${markIs("beach")?"By late afternoon the watch failed him: the Poles had crossed to the city, and he went after — as he now always went after.":markIs("fever")?"By afternoon he was up again, and the Poles had crossed to the city, and he went after — as he now always went after.":"On the beautiful boy’s traces the stricken man went deep into the sick city’s tangle."} His sense of the quarters failed among the identical bridges and identical walls; the sweetish smell stood everywhere now; he pressed himself to housefronts, took shelter behind walkers’ backs — and lost them at last at a small humped bridge: the nunlike sisters, the governess, Tadzio, gone in three directions of empty alley.</p>
+<p>Thirst tormented him, and a weakness he no longer itemized. At a greengrocer’s stall hung strawberries — overripe and soft; he remembered, from the first bright week, great strawberries, dead-ripe, eaten at the water’s edge for breakfast.</p>`,
+choices:()=>[
+ {label:"Buy the overripe strawberries and eat them as you walk.", to:"S24", mark:"berries", ev:"berries"},
+ {label:"Let the strawberries be. Thirst, at least, is a clean sensation.", to:"S24", ev:"unfed"}
+]},
+
+/* -------- canon endgame: choices die -------- */
+
+S24:{ t:9, title:"The Cistern Steps", endgame:true,
+text:()=>`
+<p>A little square opened before him, forsaken, spellbound-seeming; grass between the stones, refuse about; among the weathered houses one like a palazzo, with pointed windows behind which emptiness lodged, and little lion balconies. In the ground floor of another, a pharmacy. Warm gusts brought the smell of carbolic. He sank down on the steps of the cistern in the middle of the place and leaned his head against its stone rim${markIs("berries")?", a taste of overripe sweetness still on his tongue":""}.</p>
+<p>He sat there, the master, the artist grown worthy, author of the famous tale <em>A Wretch</em> — he who in forms of exemplary purity had renounced bohemia and the murky deep, had cancelled his sympathy with the abyss and reprobated the reprobate; the climber of the heights, who, past his knowledge and outgrown all irony, had accustomed himself to the obligations of a nation’s trust; whose fame was official, whose name had been made noble, and on whose style the schoolboys were set to form their own. He sat there; his eyelids were closed, and only now and then a look, mocking and abashed, slid out sidelong from under them and hid itself again; and his slack lips${S.f4?", cosmetically heightened,":""} shaped the odd words of what his half-dreaming brain brought up in its strange dream-logic:</p>
+<p class="setpiece flash">“For beauty, little Phaidros — mark it well — only beauty is at once divine and visible, and so it is the way of the man of the senses: the artist’s way, little Phaidros, to the spirit. But do you now believe, my dear, that he can ever win wisdom and true manly worth whose road to the spiritual leads through the senses? Or do you rather believe (I leave the decision free to you) that this is a pleasantly perilous road, a road of error and of sin in very truth, which of necessity leads astray? For you must know that we poets cannot walk the way of beauty without Eros joining us and setting himself up for guide… Our mastery of style is lie and folly, our fame and standing a farce, the crowd’s trust in us wholly ridiculous. Knowledge, Phaidros, has no dignity and no sternness: it knows, understands, forgives, without posture and without form; it has sympathy with the abyss — it is the abyss. And form, and ingenuousness, Phaidros — they lead to intoxication and desire, and they too lead to the abyss. And now I shall go, Phaidros; and you stay here; and only when you see me no longer, then go you also.”</p>`,
+choices:()=>[
+ {label:"(the monologue ends)", bare:true, to:"S25"}
+]},
+
+S25:{ t:9, title:"After the Lunch", endgame:true,
+text:()=>`
+<p>Some days later, feeling unwell, Gustav von Aschenbach left the Bäder-Hotel at a later morning hour than usual. In the hall stood a mountain of luggage, ready for transport. Whose? — The Polish name; the one he had been secretly awaiting. <span class="flash">“When?”</span> — <span class="flash">“After the lunch.”</span> He nodded, and went down to the sea.</p>`,
+choices:()=>[
+ {label:"(he goes down to the sea)", bare:true, to:"S26"}
+]},
+
+S26:{ t:9, title:"The Sandbar", endgame:true,
+text:()=>`
+<p>It was unfriendly out there. Autumn, over-livedness, lay on the once so gaily colored bathing place; its sand no longer kept clean. A camera, seemingly ownerless, stood on its tripod at the sea’s rim, and a black cloth spread over it snapped and clapped in the colder wind. Tadzio, with three or four playfellows still left him, moved before his family’s hut on the right; and, a blanket across his knees, midway between the sea and the row of cabins, the watcher lay in his chair and watched him once more.</p>
+<p>The play was unsupervised and turned rough. Jaschu — the sturdy one with the black pomaded hair — stung and blinded by a faceful of sand, forced the weaker beauty to a wrestle that ended quickly in his fall; and as if in the hour of parting the underling’s serving feeling had turned to cruelty, the victor did not let go even then, but knelt on his back and pressed his face so long into the sand that the boy, winded from the fight, threatened to suffocate. His attempts to shake off the weight were convulsive; they stopped for moments altogether. Horrified, the watcher gathered himself to the rescue — then the violent one at last released his victim. Tadzio, very pale, rose halfway and sat motionless for long minutes, propped on one arm, with darkening eyes and disordered hair. He stood; a shoulder-turn dismissed the penitent Jaschu; and he walked slantwise down to the water, barefoot, in his striped linen suit with the red breast-knot.</p>
+<p>At the flood’s edge he lingered, head bowed, drawing figures in the wet sand with the point of one foot; then went into the shallow forewater, that at its deepest did not wet his knees, crossed it idly, and reached the sandbar. There he stood a moment, face to the distance; and then began slowly to pace the long narrow strip of bared ground leftward. Severed from the land by broad water, severed from his companions by proud caprice, he walked, a wholly detached and unjoined apparition, hair blowing, out there in sea and wind, before the misty boundlessness.</p>
+<p>Again he stopped, to look out. And suddenly, as under a memory, an impulse, one hand on his hip, he turned the upper body in a lovely twist out of its stance and looked over his shoulder to the shore. The watcher there sat as he had sat once before, when first, from that dining-room threshold, the twilight-gray eyes had met his own. His head, against the chair’s back, had slowly followed the walker out there; now it lifted, as if toward the gaze, and sank on his breast, so that his eyes looked up from beneath, while his face wore the slack, inwardly sunken expression of deep sleep. But to him it was as though the pale and lovely summoner of souls out there were smiling to him, beckoning to him; as though, loosing his hand from his hip, he were pointing outward, hovering on before him, into the promise-heavy immensity. And, as so often, he rose to follow him.</p>
+<p>Minutes passed before help ran to the man sunk sideways in his chair. They carried him to his room. And before the day was out, a respectfully shaken world received the news of his death.</p>`,
+choices:()=>[
+ {label:"(the chapter closes)", bare:true, to:"FIN1"}
+]},
+
+/* ================= E-BRANCH: the reopened exit ================= */
+
+E1:{ t:4, title:"Without the Trunk", head:["Between Chapters","the record loses him for some days"],
+text:()=>`
+<p>The train drew out of a city he had now renounced twice, and relief and loss quarreled in him with a violence that astonished the connoisseur of his own states. At Mestre he read; at Padua he did not. By Verona the quarrel had found words: what was he doing, riding away from his own summer? — The Biographer notes only that a mislaid trunk makes an honest man’s alibi: one may chase property to places one could not name the other reason for going back to.</p>`,
+choices:()=>[
+ {label:"Get down at Verona; the next train back to Venice. A trunk will find its owner where its owner is.", to:"S10", flag:"f5", ev:"verona"},
+ {label:"Onward to Como, after the trunk. Let the journey at least be won.", to:"E2", ev:"como-on"}
+]},
+
+E2:{ t:5, title:"Como; the Trunk Recovered", head:["Between Chapters","the record loses him for some days"],
+text:()=>`
+<p>Como gave up the trunk with apologies in two languages and a small ceremony of receipts. He stood then in a lake-hotel room with his property restored and no plan in the world — that was the difficulty; he now needed a reason, and the reasons applied for his custom like porters.</p>`,
+choices:()=>[
+ {label:"Back to Venice: one goes where one’s summer already is.", to:"S11", flag:"f5", mark:"como", ev:"como-back"},
+ {label:"North — over the passes, home, and then the mountain house; the whole southern experiment written off.", to:"B3", mark:"from-como", ev:"como-north"},
+ {label:"On to the little sea-resort near Trieste that was once praised to him — the original, sensible plan.", to:"E3", ev:"resort"}
+]},
+
+E3:{ t:5, title:"The Resort near Trieste", head:["Between Chapters","the record loses him for some days"],
+text:()=>`
+<p>Sand without the lagoon’s evil breath; a plain hotel; sleep like his boyhood’s. Within days the work stirred — carefully, like a limb testing whether the pain is gone. And with the health came, oddly, a homesickness for danger: the newspapers spoke of Venice guardedly, in the tone of men paid to be calm, and he caught himself reading the guardedness twice.</p>`,
+choices:()=>[
+ {label:"Stay. Give the summer to the plain days and the pages; let Venice keep its weather.", to:"E4", ev:"stayed-resort"},
+ {label:"Back across the gulf — the sirocco has surely passed by now, and the hotel still holds his rooms.", to:"S11", flag:"f5", mark:"triest-back", ev:"triest-back"}
+]},
+
+E4:{ t:6, title:"A True Summer", head:["Between Chapters","elsewhere, that summer went on being fine"],
+text:()=>`
+<p>And now — the Biographer here surrenders the pen for a page to some happier colleague — now day after day the god with the burning cheeks drove his team through faultless heavens, and it was a true summer, an honest one, with nothing behind it. The chapters came like the tide, each wave a little farther up the sand. There were great strawberries at breakfast, dead-ripe and wholesome as bread; the sea lay flat and clean as a good conscience; and in the evenings the master walked the shore at his own pace, greeted by nobody, in a peace he had earned twice over — once by working, and once by leaving.</p>`,
+choices:()=>[
+ {label:"Send for the winter clothes; stay until October; finish the book by the clean sea.", to:"FIN2", ev:"stay-october"},
+ {label:"Finish the chapter first, and then decide. But the chapter, finishing, decides.", to:"FIN2", ev:"chapter-decides"}
+]},
+
+/* ================= D-BRANCH: the clean hand ================= */
+
+D1:{ t:8, title:"The Word to the Mother",
+text:()=>`
+<p>He dressed with the old exactness — gray, correct — and after dinner had himself announced. In the small salon off the hall the pearl-hung lady received him standing, cool and measured.</p>
+<p><span class="flash">“Madame, permit a stranger to serve you with a warning that self-interest withholds from you. Leave, at once, with your son and your daughters. Venice is plague-struck.”</span> He said it as he had drafted it, and no more. Her glance went once to the glass door, behind which, far across the hall, the young people waited; then she thanked him — a cool, measured inclination of the head, as one aristocrat thanks another for a service that can be neither repaid nor ever mentioned. He bowed and went. He had not looked at the door even once. It was, he noted that night, the hardest labor since the <em>Frederick</em> — the prose epic of the Prussian king that had made his name.</p>`,
+choices:()=>[
+ {label:"Now pack your own trunk; the warning binds the warner.", to:"D2", ev:"warn-and-pack"},
+ {label:"Stay to see them safely gone; then think of yourself.", to:"D2", mark:"saw-off", ev:"warn-and-stay"}
+]},
+
+D2:{ t:9, title:"The Departure of the Poles",
+text:()=>`
+<p>In the morning the hall was full of their luggage. The nunlike sisters, straight as candles; the governess counting cases; the pearl-hung lady, unhurried, as though travel were a form of standing still. Tadzio, in the dark blue sailor’s over-jacket with gold buttons, stood a moment at the glass door — and looked back across the hall, the strange twilight-gray eyes finding the gray man by the pillar. Nothing more. The look ended; the door took them; the motor launch drew a white seam across the lagoon toward the station, and was gone.</p>
+<p>${markIs("saw-off")?"He had seen them off; the hall stood suddenly very large around him.":"His own case stood packed upstairs; the hall stood suddenly very large around him."}</p>`,
+choices:()=>[
+ {label:"Down to the sea, to the empty beach and the chair.", to:"FIN3", ev:"sea-after"},
+ {label:"Settle the bill; ask after the evening boat.", to:"FIN3", ev:"boat-after"}
+]},
+
+/* ================= L-BRANCH: the late flight ================= */
+
+L1:{ t:9, title:"The Night Boat", head:["After the Chapters","the book stays behind"],
+text:()=>`
+<p>He packed in an hour what had taken a season to gather, paid, and gave no reasons; the office had stopped asking for any. The night boat took the lagoon at a walking pace. The city lay out its lights behind him, string past string; and somewhere behind the lights, in a hotel bed, slept a boy who would never know that he had been the whole of a famous man’s last chapter — nor that the chapter had been torn out.</p>`,
+choices:()=>[
+ {label:"The rail: watch Venice sink into the sea-mist, to the last light.", to:"FIN4", mark:"looked-back", ev:"looked-back"},
+ {label:"The cabin. Do not look. Looking is what all this was.", to:"FIN4", ev:"did-not-look"}
+]},
+
+/* ================= CORRIDOR A: to the tigers ================= */
+
+A1:{ t:1, title:"Outbound", head:["Beyond the Chapters","the file for these months is thin"],
+text:()=>`
+<p>The Biographer’s difficulty begins at Trieste. An Austrian Lloyd manifest, dated the 24th of May: <em>von Aschenbach, G., writer, of Munich — one cabin, Bombay, via Port Said.</em> No letter explains the booking. His daughter — his one child, herself a wife by then — received a card only: <span class="flash">“The work will keep. I am going to look at what I saw.”</span></p>`,
+choices:()=>[
+ {label:"Write to the daughter from the ship; a father owes his heir the itinerary at least.", to:"A2", ev:"wrote-daughter"},
+ {label:"Write to no one. A man may go unaccounted-for once in fifty years.", to:"A2", mark:"unaccounted", ev:"unaccounted"}
+]},
+
+A2:{ t:3, title:"Port Said", head:["Beyond the Chapters","the file for these months is thin"],
+text:()=>`
+<p>Coal dust, brass, and heat like a hand laid over the mouth. An English fellow-passenger, hearing his destination, was frank: the cholera was out of India — Hindustan aflame with it these several years, the ports watched, the pilgrim routes worse. Going <em>toward</em> it, sir, was an original itinerary. — Two lines in a notebook survive from the canal: <span class="flash">“The sickness and I have exchanged directions. It travels to Europe, to be respectable; I go the other way.”</span></p>`,
+choices:()=>[
+ {label:"Book the return passage for the autumn — a formality, but a rail to hold.", to:"A3", ev:"return-booked"},
+ {label:"Book nothing. The word was always “Hold out!”; let it mean, for once, “onward.”", to:"A3", ev:"no-return"}
+]},
+
+A3:{ t:5, title:"Bombay", short:true, head:["Beyond the Chapters","the file for these months is thin"],
+text:()=>`
+<p>Of India we possess three letters and a bill of lading. The letters are serene, exact — palms, kites, the white glare of a courthouse — and say nothing. The bill of lading is for a tin trunk sent up-country after him, toward the Bengal side.</p>`,
+choices:()=>[
+ {label:"Up-country by rail, toward the delta.", to:"A4", ev:"delta-bound"},
+ {label:"Linger a fortnight on the verandas first; acclimatize like a sensible European.", to:"A4", mark:"lingered-india", ev:"lingered-india"}
+]},
+
+A4:{ t:7, title:"The Delta", head:["Beyond the Chapters","the file for these months is thin"],
+text:()=>`
+<p>A district officer’s guest-book; a mission doctor’s diary: the last witnesses. He went by boat among the islands${markIs("lingered-india")?" — later than was wise; the rains had turned":""} — a primeval island-wilderness, shunned of men, steaming under a thick-vapored sky; hairy palm-shafts; milk-white flowers big as dishes on the standing green water; birds of strange kind, high-shouldered, standing in the shallows and looking motionless aside. The doctor swears the visitor named these things before he saw them, like a man checking proofs against a manuscript. The fever declared itself on the third evening.</p>`,
+choices:()=>[
+ {label:"Press on while the light holds; the tiger owes him an appearance.", to:"FIN5", mark:"pressed-on", ev:"pressed-on"},
+ {label:"Lie in the mission bungalow, and let the vision come to the bed instead.", to:"FIN5", ev:"bungalow"}
+]},
+
+/* ================= CORRIDOR B: the mountain house ================= */
+
+B0:{ t:0, title:"The Desk Defended", head:["Outside the Story","Munich; then the mountains"],
+text:()=>`
+<p>He walked home from the cemetery stop like a man leading himself by the collar, and gave the evening not to map and timetable but to the manuscript. At the desk next morning: the same sentence, the same stone in the road. But discipline was his inheritance from the paternal side — officers, judges, functionaries; men who had lived their strict, decently meager lives in the king’s service — and it held. “Hold out!” had never yet failed to sound like wisdom.</p>`,
+choices:()=>[
+ {label:"Hold. The mountains in June, the work all summer, and no journey at all.", to:"B1", ev:"held-desk"},
+ {label:"Within the week the urge returns, stronger and better argued. Hear it out.", to:"S2", ev:"urge-returned"}
+]},
+
+B1:{ t:2, title:"The Mountain House", head:["Outside the Story","the mountains"],
+text:()=>`
+<p>The country house in the hills: rain walking through the garden in low clouds, evening thunderstorms that put the house lights out, the ravens he fed swinging in the tops of the spruces. Cold water over chest and back at five; two tall wax candles in silver sticks at the head of the manuscript; the sentence taken up again, daily, at the stone.</p>`,
+choices:()=>[
+ {label:"Invite the daughter and her husband for August; a house is better defended garrisoned.", to:"B2", mark:"invited", ev:"invited"},
+ {label:"Solitude. The work dislikes witnesses.", to:"B2", ev:"solitude"}
+]},
+
+B2:{ t:4, title:"The Stuck Chapter", head:["Outside the Story","the mountains"],
+text:()=>`
+<p>${has("pola-retreat")?"He had come back from the Adriatic with an unused summer and unpacked it in the mountains.":markIs("invited")?"The invitation was written and answered; August would bring voices to the house.":"The house kept its counsel, and so did he."} The chapter would not pass the place where it had stopped in May. He wrote around it, above it, after it; the pages were faultless, and did not live. In the newspaper, between the harvest and the fleet, a small item: cholera in Venice; denied by the authorities. He read it twice, and could not have said why.</p>`,
+choices:()=>[
+ {label:"Clip the newspaper item; the artist keeps what stirs him unaccountably.", to:"B3", mark:"clipped", ev:"clipped"},
+ {label:"Turn the page. Other men’s weather.", to:"B3", ev:"turned-page"}
+]},
+
+B3:{ t:6, title:"The Visit", head:["Outside the Story","the mountains"],
+text:()=>`
+<p>${markIs("from-como")?"He had come north over the passes with a trunk full of summer clothes and no summer, and the mountains took him back without questions.":markIs("clipped")?"The clipping lay in the desk drawer, face down.":""} His married daughter came in August — his one child; the short happy marriage of his youth had ended long ago in his wife’s death — and found her father exact, courteous, and somewhere not present. She said afterward — it is the Biographer’s best document for these years — that he sat with them <span class="flash">“like a man keeping a seat for someone.”</span></p>`,
+choices:()=>[
+ {label:"Ask the daughter to stay through September.", to:"B4", ev:"asked-stay"},
+ {label:"Let them go with the good weather; the house closes better empty.", to:"B4", ev:"let-go"}
+]},
+
+B4:{ t:8, title:"Winter Comes Early", short:true, head:["Outside the Story","the mountains"],
+text:()=>`
+<p>Snow in the passes by early October. The summer’s yield: sixty pages, exemplary, settled, polished — and cold through, the way iron is cold. Honors arrived by post and were answered by return.</p>`,
+choices:()=>[
+ {label:"Accept the new decoration with the usual three sentences.", to:"FIN6", ev:"decoration"},
+ {label:"Leave the letter unopened until the chapter moves. Superstition — but his own.", to:"FIN6", mark:"unopened", ev:"unopened"}
+]},
+
+};
+
+/* ================= FINALES ================= */
+
+const FINALES = {
+
+FIN1:{ name:"Death in Venice", verdict:"You died on Mann’s schedule.",
+prose:()=>``,
+compare:()=>{
+  const div=[];
+  if(has("stayed-early")&&has("resolve-leave")) div.push("Mann sent his man all the way to the station and let a trunk turn him back; you countermanded at the hotel door — the luggage comedy, the book’s one reprieve, went unplayed, and the end came anyway.");
+  else if(has("stayed-early")) div.push("Mann sent his man to the station and let a trunk turn him back; you never packed at all — the luggage comedy, the book’s one reprieve, went unplayed, and the end came anyway.");
+  if(has("train")) div.push("You did what his man could not: you rode away — and then did what his man did without ever boarding: you came back.");
+  if(!S.f2) div.push("His man spent the vision into a page and a half of flawless prose; you kept it unspent, and it kept you.");
+  if(!S.f3) div.push("His man bought the truth in English and carried it like a coin under the tongue; you never asked. Ignorance and knowledge, it turns out, weigh the same in that chair.");
+  if(!S.f4) div.push("His man went painted to the last beach; you went gray. It changed the color of nothing but the final page.");
+  if(div.length===0){
+    return `<p class="compare">Where the paths could part — at the timetable, the station, the writing-case, the clerk’s counter, the barber’s chair — you and Mann’s man chose with one hand, and the record cannot tell your story from his. Every door stood open; the book walked past every one of them wearing your face.</p>`;
+  }
+  return `<p class="compare">The author’s man and yours met the same end in the same chair, with the pale and lovely summoner of souls beckoning from the sandbar. ${div.slice(0,2).join(" ")}</p>`;
+}},
+
+FIN2:{ name:"The Amiable South", verdict:"You escaped on the luggage’s schedule, not the author’s.",
+prose:()=>`
+<p>He stayed until October, and then until the October after; the book was finished by the clean sea and published to a gratitude that had feared, without saying so, that there would be no more books. He grew brown, then old — old as he had always wished, honored on every rung; and to the end of a long life he kept, on his desk at the little resort, no photograph and no relic, only a railway baggage-check, cancelled, for one trunk, misdirected to Como in the summer of 19—. Asked once what it commemorated, the master said: <span class="flash">“Good service.”</span></p>`,
+compare:()=>`<p class="compare">Mann bent the railway itself to bring his man back — a trunk misdirected to Como is the whole machinery of fate in that book — and you rode the error out the far side of it. The book that was written ends in a deck chair with the world respectfully shaken; the book you made ends with the winter clothes sent for and the strawberries wholesome. He would have said — and the Biographer with him — that happiness of this kind teaches nothing; but the man inside it is alive, brown, and writing, and asks politely what, precisely, the deck chair taught.</p>`},
+
+FIN3:{ name:"A Clean Hand", verdict:"You died on the city’s schedule — but as yourself.",
+prose:()=>`
+<p>${has("boat-after")?"He asked after the evening boat, and never used the answer.":"He sat by the empty beach an hour, and came in when the wind rose."} The fever that had walked the alleys with him for weeks made itself known that night — courteously at first, as such guests do. He would not have it called the evil in his hearing; afterward, being past hearing, it could be called what it was. He died three days later, gray-haired, his own face, at the open window with the sea in it. The Polish family was by then across the Alps. The barricade fell on the city two days after; the obituaries, respectful and shaken, said cholera, said Venice, and knew, as obituaries do, nothing at all.</p>`,
+compare:()=>`<p class="compare">Both books end in a Venice death; the difference is one sentence spoken across a hotel hall, and it is nearly the whole difference there is. Mann’s man kept the city’s secret because the city was keeping his, and was paid in a last look from a sandbar; yours spent the secret in a warning, and the family it named was over the Alps when the barricade fell. The page and a half from under the awning survives in both stories — but only in yours could its author have signed it without flinching.</p>`},
+
+FIN4:{ name:"The Survivor", verdict:"You left Venice alive; the book stayed behind.",
+prose:()=>`
+<p>Munich received him as it receives everyone: without comment. The flat in the Prinzregentenstraße; the cold water at dawn; the two candles at the head of the manuscript. Everything held except the thing the holding was for: ${S.f2?"after the page and a half from the beach — which appeared that winter and was called, by people who knew nothing, serene — he wrote nothing more that he did not burn.":"he wrote nothing more that survived him."} He answered letters, sat on juries, was seen at first nights${has("looked-back")?"; and once, at a lecture on the lagoon painters, left before the lights went down":""}. He lived nine years more and died of nothing in particular, full of honors, his last book the one before Venice. The Biographer, who owes his living to dead men, has never decided whether the surviving was the sin or the punishment.</p>`,
+compare:()=>`<p class="compare">Mann’s man heard the same truth at the same counter and chose the chair on the sandbar; you chose the gangway, which the record is obliged to call wisdom. But the book that was written burns down to a death that means everything, and the book you made ends in nine years of answered letters. Whether that was the better bargain is a question the Biographer is paid too little to settle, and the two men concerned are no longer taking questions.</p>`},
+
+FIN5:{ name:"The Tigers", verdict:"You went as far as the tigers.",
+prose:()=>`
+<p>Whether he saw a tiger the record cannot say. The mission doctor’s diary says only that at the end the visitor was <span class="flash">“entirely tranquil, as men are who have kept an appointment,”</span> and that he asked for the shutters open ${markIs("pressed-on")?"on the water":"toward the water"} at first light. He died of the fever eleven days before the same strain, in the same summer, was found in two corpses at Venice — a city he had twice been ill in, and never ceased to praise. The consulate’s telegram reached Munich in nine words. A respectfully shaken world made do with them.</p>`,
+compare:()=>`<p class="compare">Mann turned his man back at the timetable — “not quite so far as the tigers” — and sent the jungle to Venice instead, by way of the Ganges delta and a fruit stall; the fever kept its appointment either way. You chose the meeting-place, which is not nothing: it is nearly everything the book believes a man cannot do. Of the Lido summer — the boy, the barber, the beautiful lying city — your story knows nothing; the whole file is a manifest, three letters, and nine words from a consulate, and the Biographer confesses he has never closed a thinner file with more respect.</p>`},
+
+FIN6:{ name:"The Story Does Not Notice", verdict:"You left the story; the story did not notice.",
+prose:()=>`
+<p>He held out. The chapter moved at last — chapters do — and the book appeared two winters later to national gratitude. He grew old as he had always wished to grow old, on every rung of the human ladder characteristically fruitful; he died many years later at his desk, in winter, between one sentence and the next, and the sentence was finished from his notes. Of tigers, plagues, or boys on beaches the record of these years knows nothing whatever; there was nothing to know.</p>`,
+compare:()=>{
+  let extra="";
+  if(has("pola-retreat")) extra=" You went as far as the Adriatic before the desk reclaimed you; the file notes the unused summer without comment.";
+  else if(has("como-north")) extra=" You went as far as Como — trunk and all — before the desk reclaimed you; the file notes the unused summer without comment.";
+  return `<p class="compare">Venice filled and sickened and lied that summer exactly as the book describes; only no famous stranger came to watch a boy across the sand, and the deck chair at the end of the fifth chapter stood empty. In its place: sixty exemplary pages, a decoration answered by return of post, an old age arrived at on schedule.${extra} Mann held that nearly everything great stands as a Despite — done despite grief, despite poverty, despite passion; you built the one ending he never wrote: the one in which nothing had to be withstood at all.</p>`;
+}},
+
+};
+
+/* ================= title page ================= */
+
+function renderTitle(){
+  document.getElementById("runhead").innerHTML="";
+  document.getElementById("headrule").style.visibility="hidden";
+  document.documentElement.classList.remove("pallor");
+  const el=document.getElementById("node");
+  el.className="";
+  el.innerHTML=`
+  <div id="title-block">
+    <div class="series">a game of chapters</div>
+    <h1>Death in Venice</h1>
+    <p class="after">after Thomas Mann</p>
+    <p class="credit"><em>Der Tod in Venedig</em>, 1912 · rendered from the author’s German for this edition</p>
+  </div>
+  <div class="ornament">❦</div>
+  <div id="preface">
+    <p>The life of Gustav von Aschenbach has been written once already, by me, at the family’s request and the publisher’s expense: an orderly volume, every date correct, that ends in a deck chair on the Lido in the plague summer of 19—. It says what could be documented. Its second chapter — ancestry, works, honors — is distributed through the present volume as marginalia, where it belongs.</p>
+    <p>This is the other book: the one assembled from the margins of the first. From the exits he saw and did not take; the trains boarded and unboarded; the sentence written, or not written, under an awning. None of it is invention; all of it is possibility — which is worse. The dates are correct here too. Only the man is loose.</p>
+    <p class="formula">The reader of a book follows; the reader of this book chooses.</p>
+  </div>
+  <a class="begin" href="#" id="beginlink">Chapter One</a>`;
+  document.getElementById("beginlink").addEventListener("click",e=>{
+    e.preventDefault(); go("S1");
+  });
+}
+
+/* ================= engine ================= */
+
+function runhead(node){
+  let chap, strand;
+  if(node.head){ chap=node.head[0]; strand=node.head[1]; }
+  else { const st=STATIONS[node.t]; chap=st[0]; strand=st[1]; }
+  return `${chap}<span class="strand">${strand}</span>`;
+}
+
+function render(){
+  const id=S.node;
+  if(FINALES[id]){ renderFinis(id); return; }
+  const node=NODES[id];
+  document.getElementById("headrule").style.visibility="visible";
+  document.getElementById("runhead").innerHTML=runhead(node);
+  document.documentElement.classList.toggle("pallor", node.t>=7);
+  const el=document.getElementById("node");
+  el.className=node.endgame?"endgame":"";
+  const choices=node.choices();
+  let html=`<h2 class="nodetitle">${node.title}</h2><div class="prose">${node.text()}</div><div id="choices">`;
+  choices.forEach((c,i)=>{
+    html+=`<a class="choice${c.bare?" bare":""}" data-i="${i}" href="#"><span>${c.label}</span></a>`;
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
+  el.querySelectorAll(".choice").forEach(a=>{
+    a.addEventListener("click",e=>{
+      e.preventDefault();
+      choose(choices[+a.dataset.i]);
+    });
+  });
+  window.scrollTo({top:0});
+}
+
+function choose(c){
+  if(c.flag) S[c.flag]=true;
+  if(c.ev) S.ev[c.ev]=true;
+  S.mark=c.mark||null;
+  S.from=S.node;
+  S.node=(typeof c.to==="function")?c.to(S):c.to;
+  render();
+}
+
+function renderFinis(id){
+  const f=FINALES[id];
+  document.getElementById("runhead").innerHTML="";
+  document.getElementById("headrule").style.visibility="hidden";
+  const el=document.getElementById("node");
+  el.className="";
+  const prose=f.prose();
+  el.innerHTML=`
+    ${prose?`<div class="prose">${prose}</div>`:""}
+    <div class="finis">
+      <div class="fword">Finis</div>
+      <h3>${f.name}</h3>
+      <p class="verdict">${f.verdict}</p>
+      ${f.compare()}
+      <a class="begin" href="#" id="againlink">begin again</a>
+    </div>`;
+  document.getElementById("againlink").addEventListener("click",e=>{
+    e.preventDefault(); S=freshState(); renderTitle();
+  });
+  window.scrollTo({top:0});
+}
+
+function go(id){ S.from=S.node; S.node=id; render(); }
+
+/* ---------- graph audit (console only) ---------- */
+function audit(){
+  const probes=[
+    {f1:false,f2:false,f3:false,f4:false,f5:false},
+    {f1:true, f2:true, f3:true, f4:true, f5:false},
+    {f1:true, f2:false,f3:true, f4:false,f5:true},
+    {f1:false,f2:true, f3:false,f4:true, f5:true}
+  ];
+  const bad=[];
+  for(const id in NODES){
+    for(const p of probes){
+      const saved=S; S=Object.assign(freshState(),p); S.node=id;
+      try{
+        NODES[id].text();
+        NODES[id].choices().forEach(c=>{
+          const t=(typeof c.to==="function")?c.to(S):c.to;
+          if(!NODES[t]&&!FINALES[t]) bad.push(id+" → "+t);
+        });
+      }catch(err){ bad.push(id+" ! "+err.message); }
+      S=saved;
+    }
+  }
+  if(bad.length) console.warn("graph audit:",bad);
+  return bad;
+}
+
+/* ---------- boot ---------- */
+S=freshState();
+renderTitle();
+audit();
+</script>
+</body>
+</html>
